@@ -1,10 +1,12 @@
+![alt tag](https://github.com/RobertJGabriel/gulp-w3c-validator-html/blob/master/dist/readme.png?raw=true)
+
 ## Synopsis
 
 A simple project to check for errors and that your HTML meets the w3c standard.
 
 ## Code Example
 
-``
+```
 coffee = require('gulp-coffee')
 gulp = require('gulp')
 runSequence = require('run-sequence')
@@ -22,7 +24,7 @@ gulp.task 'test', ->
   gulp.src('tests/bad.html').pipe(w3cGulp())
   return
 
-``
+```
 
 ## Motivation
 
