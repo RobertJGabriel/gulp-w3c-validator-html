@@ -1,8 +1,8 @@
-var chalk, gutil, handleMessages, reporter, through, w3cjs;
+var chalk, gutil, handleMessages, through, w3cJavascript;
 
 through = require('through2');
 
-w3cjs = require('w3cjs');
+w3cJavascript = require('w3cjs');
 
 gutil = require('gulp-util');
 
@@ -11,9 +11,9 @@ chalk = require('chalk');
 handleMessages = function(file, messages, options) {
   var errorText, infoText, lines, success, warningText;
   success = true;
-  errorText = chalk.red.bgRed.bold('Error:');
-  warningText = chalk.blue.bgRed.bold('Warning:');
-  infoText = chalk.blue.bgRed.bold('Info -');
+  errorText = chalk.red.bold('ERROR');
+  warningText = chalk.blue.bold('WARNING');
+  infoText = chalk.blue.bold('INFO');
   lines = file.contents.toString().split(/\r\n|\r|\n/g);
   return messages.forEach(function(message) {
     var errorColumn, erroredLine, location, type;
@@ -39,44 +39,36 @@ handleMessages = function(file, messages, options) {
       erroredLine = gutil.colors.grey(erroredLine.substring(0, errorColumn - 1)) + gutil.colors.red.bold(erroredLine[errorColumn - 1]) + gutil.colors.grey(erroredLine.substring(errorColumn));
     }
     if (typeof message.lastLine !== 'undefined' || typeof lastColumn !== 'undefined') {
-      gutil.log(type, file.relative, location, message.message);
+      gutil.log("\r\n");
+      gutil.log(type);
+      gutil.log("File - " + file.relative);
+      gutil.log("Location - " + location);
+      gutil.log("Message - " + message.message);
     } else {
       gutil.log(type, file.relative, message.message);
     }
     if (erroredLine) {
-      gutil.log(erroredLine);
+      gutil.log("Line - " + erroredLine);
       return;
     }
     return success;
   });
 };
 
-reporter = function() {
-  return through.obj(function(file, enc, cb) {
-    cb(null, file);
-    if (file.w3cjs && !file.w3cjs.success) {
-      throw new gutil.PluginError('gulp-w3cjs', 'HTML validation error(s) found');
-    }
-  });
-};
-
 module.exports = function(options) {
   options = options || {};
   if (typeof options.url === 'string') {
-    w3cjs.setW3cCheckUrl(options.url);
+    w3cJavascript.w3cCheckUrl(options.url);
   }
   return through.obj(function(file, enc, callback) {
     if (file.isNull()) {
       return callback(null, file);
     }
-    if (file.isStream()) {
-      return callback(new gutil.PluginError('gulp-w3cjs', 'Streaming not supported'));
-    }
-    w3cjs.validate({
+    w3cJavascript.validate({
       proxy: options.proxy ? options.proxy : void 0,
       input: file.contents,
       callback: function(res) {
-        file.w3cjs = {
+        file.w3cJavascript = {
           success: handleMessages(file, res.messages, options),
           messages: res.messages
         };
@@ -86,6 +78,4 @@ module.exports = function(options) {
   });
 };
 
-module.exports.reporter = reporter;
-
-module.exports.setW3cCheckUrl = w3cjs.setW3cCheckUrl;
+module.exports.w3cCheckUrl = w3cJavascript.w3cCheckUrl;
