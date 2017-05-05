@@ -1,4 +1,4 @@
-![alt tag](https://github.com/RobertJGabriel/gulp-w3c-validator-html/blob/master/dist/readme.png?raw=true)
+![alt tag](.github/readme.png)
 
 ## Synopsis
 
@@ -6,7 +6,7 @@ A simple project to check for errors and that your HTML meets the w3c standard.
 
 ## Code Example
 
-```
+```javascript
 coffee = require('gulp-coffee')
 gulp = require('gulp')
 runSequence = require('run-sequence')
@@ -31,13 +31,19 @@ gulp.task 'test', ->
 I needed this for a project and wanted to try and remake it.
 
 ## Installation
-1. Include the index.js file.
-2. Include it
-3. Add a pipe ``.pipe(w3cGulp())``
+
+- Include the index.js file.
+- Include it
+- Add a pipe ``.pipe(w3cGulp())``
 
 ## Tests
 
-``npm run test``
+```javascript
+npm run test
+```
+
+## Screenshot
+![Screen shot](https://github.com/RobertJGabriel/gulp-w3c-validator-html/blob/master/dist/readme.png?raw=true)
 
 ## Contributors
 

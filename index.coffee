@@ -10,16 +10,31 @@ handleMessages = (file, messages, options) ->
   infoText = chalk.blue.bold('INFO')
   lines = file.contents.toString().split(/\r\n|\r|\n/g)
 
-  messages.forEach (message) ->    
-    if options.verifyMessage and !options.verifyMessage(message.type, message.message)
+
+  messages.forEach (message) ->
+
+    verifyMessage = options.verifyMessage(message.type, message.message)
+
+    if options.verifyMessage and !verifyMessage
       return
+
     if message.type == 'info' and !options.showInfo
       return
+
     if message.type == 'error'
       success = false
       
-    type = if message.type == 'error' then errorText else if message.type == 'info' then infoText else warningText
-    location = 'Line ' + (message.lastLine or 0) + ', Column ' + (message.lastColumn or 0) + ':'
+    switch message.type
+      when "error"
+        type = errorText
+      when "info"
+        type = infoText
+      else
+        type = warningText
+        
+    location = 'Line ' + (message.lastLine or 0)
+    location += ', Column ' + (message.lastColumn or 0) + ':'
+
     erroredLine = lines[message.lastLine - 1]
     
     if erroredLine
@@ -28,7 +43,12 @@ handleMessages = (file, messages, options) ->
         erroredLine = erroredLine.slice(errorColumn - 50)
         errorColumn = 50
       erroredLine = erroredLine.slice(0, 60)
-      erroredLine = gutil.colors.grey(erroredLine.substring(0, errorColumn - 1)) + gutil.colors.red.bold(erroredLine[errorColumn - 1]) + gutil.colors.grey(erroredLine.substring(errorColumn))
+
+      erroredLine = gutil.colors.grey(erroredLine.substring(0, errorColumn - 1))
+      erroredLine += gutil.colors.red.bold(erroredLine[errorColumn - 1])
+      erroredLine += gutil.colors.grey(erroredLine.substring(errorColumn))
+    
+    
     if typeof message.lastLine != 'undefined' or typeof lastColumn != 'undefined'
       gutil.log "\r\n"
       gutil.log type

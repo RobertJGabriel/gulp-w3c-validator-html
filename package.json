@@ -1,5 +1,5 @@
 {
-  "name": "gulp-w3c-validator",
+  "name": "gulp-w3c-validator-html",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
