@@ -7,6 +7,7 @@ A simple project to check for errors and that your HTML meets the w3c standard.
 ## Code Example
 
 ```javascript
+
 coffee = require('gulp-coffee')
 gulp = require('gulp')
 runSequence = require('run-sequence')
